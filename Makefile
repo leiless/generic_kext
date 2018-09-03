@@ -1,20 +1,18 @@
+#
+# macOS generic kernel extension Makefile
+#
+
 KEXTNAME=example
 KEXTVERSION=1.0.0
 KEXTBUILD=1.0.0d1
-BUNDLEDOMAIN=com.apple
+BUNDLEDOMAIN=com.example
 
 # for creating a signed kext
-#DEVIDKEXT=	"your Apple Developer ID certificate label"
+#SIGNCERT=	"your Apple Developer ID certificate label"
 
 # for using unsupported interfaces not part of the supported KPI
 #CFLAGS=	-Wno-\#warnings
 #KLFLAGS=	-unsupported
-
-
-# macOS kernel extension makefile
-# Authored 2018, Daniel Roethlisberger
-# Provided under the Unlicense
-# https://github.com/droe/example.kext
 
 # Designed to be included from a Makefile which defines the following:
 #
@@ -25,7 +23,7 @@ BUNDLEDOMAIN=com.apple
 #
 # Optionally, the Makefile can define the following:
 #
-# DEVIDKEXT       label of Developer ID cert in keyring for code signing
+# SIGNCERT        label of Developer ID cert in keyring for code signing
 # ARCH            x86_64 (default) or i386
 # PREFIX          install/uninstall location; default /Library/Extensions/
 #
@@ -138,7 +136,7 @@ KLFLAGS+=	-c -unsupported
 SRCS:=		$(wildcard *.c)
 HDRS:=		$(wildcard *.h)
 OBJS:=		$(SRCS:.c=.o)
-MKFS:=		$(wildcard Makefile GNUmakefile Mk/*.mk)
+MKFS:=		$(wildcard Makefile)
 
 
 # targets
@@ -155,28 +153,35 @@ $(KEXTMACHO): $(OBJS)
 	otool -h $@
 
 Info.plist~: Info.plist.in
-	cat $^ \
-	| sed -e 's/__KEXTNAME__/$(KEXTNAME)/g' \
-	      -e 's/__KEXTMACHO__/$(KEXTMACHO)/g' \
-	      -e 's/__KEXTVERSION__/$(KEXTVERSION)/g' \
-	      -e 's/__KEXTBUILD__/$(KEXTBUILD)/g' \
-	      -e 's/__BUNDLEID__/$(BUNDLEID)/g' \
-	>$@
+	sed \
+		-e 's/__KEXTNAME__/$(KEXTNAME)/g' \
+		-e 's/__KEXTMACHO__/$(KEXTMACHO)/g' \
+		-e 's/__KEXTVERSION__/$(KEXTVERSION)/g' \
+		-e 's/__KEXTBUILD__/$(KEXTBUILD)/g' \
+		-e 's/__BUNDLEID__/$(BUNDLEID)/g' \
+		-e 's/__OSBUILD__/$(shell /usr/bin/sw_vers -buildVersion)/g' \
+	$^ > $@
 
 $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
 	mkdir -p $@/Contents/MacOS
 	cp $< $@/Contents/MacOS
-	cat Info.plist~ \
-	| sed -e 's/__LIBS__//g' \
-	>$@/Contents/Info.plist
+
+	sed -e 's/__LIBS__//g' Info.plist~ > $@/Contents/Info.plist
+
+	# TODO: replace evil system(3)
 	cat Info.plist~ \
 	| awk '/__LIBS__/ {system("kextlibs -xml $(KLFLAGS) $@");next}1' \
 	>$@/Contents/Info.plist~
+
 	mv $@/Contents/Info.plist~ $@/Contents/Info.plist
+
 	touch $@
+
 ifdef SIGNCERT
-	$(CODESIGN) -s $(SIGNCERT) -f $(KEXTBUNDLE)
+	# TODO: support --timestamp option
+	$(CODESIGN) --force --sign $(SIGNCERT) $(KEXTBUNDLE)
 endif
+
 	dsymutil -o $<.kext.dSYM $@/Contents/MacOS/$<
 
 load: $(KEXTBUNDLE)
@@ -184,10 +189,10 @@ load: $(KEXTBUNDLE)
 	sudo sync
 	sudo kextutil $<
 	sudo chown -R '$(USER):$(shell id -gn)' $<
-	sudo dmesg|grep $(KEXTNAME)|tail -1
+	sudo dmesg | grep $(KEXTNAME) | tail -1
 
 stat:
-	kextstat|grep $(KEXTNAME)
+	kextstat | grep $(KEXTNAME)
 
 unload:
 	sudo kextunload $(KEXTBUNDLE)
@@ -200,7 +205,7 @@ install: $(KEXTBUNDLE) uninstall
 uninstall:
 	test -d "$(PREFIX)"
 	test -e "$(PREFIX)/$(KEXTBUNDLE)" && \
-		sudo rm -rf "$(PREFIX)/$(KEXTBUNDLE)" || true
+	sudo rm -rf "$(PREFIX)/$(KEXTBUNDLE)" || true
 
 clean:
 	rm -rf $(KEXTBUNDLE) $(KEXTBUNDLE).dSYM $(KEXTMACHO) Info.plist~ $(OBJS)

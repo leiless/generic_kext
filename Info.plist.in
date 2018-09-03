@@ -2,24 +2,28 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleIdentifier</key>
-	<string>__BUNDLEID__</string>
+	<key>BuildMachineOSBuild</key>
+	<string>__OSBUILD__</string>
 	<key>CFBundleExecutable</key>
 	<string>__KEXTMACHO__</string>
+	<key>CFBundleIdentifier</key>
+	<string>__BUNDLEID__</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>__KEXTNAME__</string>
-	<key>CFBundleVersion</key>
-	<string>__KEXTBUILD__</string>
-	<key>CFBundleShortVersionString</key>
-	<string>__KEXTVERSION__</string>
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
+	<key>CFBundleShortVersionString</key>
+	<string>__KEXTVERSION__</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>__KEXTBUILD__</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>__COPYRIGHT__</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 __LIBS__
