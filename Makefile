@@ -8,44 +8,41 @@ KEXTBUILD=1.0.0d1
 BUNDLEDOMAIN=com.example
 
 #
-# For creating a signed kext
-#
-# NOTE: code signature can significantly increase code size
-# For ad-hoc code signature  use single hyphen(e.g. -)
-#
-#SIGNCERT=	"your Apple Developer ID certificate label"
-
-# for using unsupported interfaces not part of the supported KPI
-#CFLAGS=	-Wno-\#warnings
-#KLFLAGS=	-unsupported
-
 # Designed to be included from a Makefile which defines the following:
 #
-# KEXTNAME        short name of the kext (e.g. example)
-# KEXTVERSION     version number, cf TN2420 (e.g. 1.0.0)
-# KEXTBUILD       build number, cd TN2420 (e.g. 1.0.0d1)
-# BUNDLEDOMAIN    the reverse DNS notation prefix (e.g. com.example)
+# KEXTNAME        Short name of the kext
+# KEXTVERSION     Version number, see TN2420
+# KEXTBUILD       Build number, see TN2420
+# BUNDLEDOMAIN    The reverse DNS notation prefix
 #
 # Optionally, the Makefile can define the following:
 #
-# SIGNCERT        label of Developer ID cert in keyring for code signing
-# ARCH            x86_64 (default) or i386
-# PREFIX          install/uninstall location; default /Library/Extensions/
+# SIGNCERT        Label of Developer ID cert in keyring for code signing
+#                 NOTE: code signature will increase code size(18k)
+#                 For ad-hoc signature  use single hyphen(e.g. -)
 #
-# BUNDLEID        kext bundle ID; default $(BUNDLEDOMAIN).kext.$(KEXTNAME)
-# KEXTBUNDLE      name of kext bundle directory; default $(KEXTNAME).kext
-# KEXTMACHO       name of kext Mach-O executable; default $(KEXTNAME)
+# ARCH            x86_64 (default) or i386
+# PREFIX          Install/uninstall location; default /Library/Extensions
+#
+# BUNDLEID        KEXT bundle ID; default $(BUNDLEDOMAIN).kext.$(KEXTNAME)
+# KEXTBUNDLE      Name of kext bundle directory; default $(KEXTNAME).kext
+# KEXTMACHO       Name of kext Mach-O executable; default $(KEXTNAME)
 #
 # MACOSX_VERSION_MIN  minimal version of macOS to target
 # SDKROOT         Apple Xcode SDK root directory to use
-# CPPFLAGS        additional precompiler flags
-# CFLAGS          additional compiler flags
-# LDFLAGS         additional linker flags
-# LIBS            additional libraries to link against
-# KLFLAGS         additional kextlibs flags
+# CPPFLAGS        Additional precompiler flags
+# CFLAGS          Additional compiler flags
+#                 Example: -Wunknown-warning-option
+#
+# LDFLAGS         Additional linker flags
+# LIBS            Additional libraries to link against
+# KLFLAGS         Additional kextlibs flags
+#                 Example: -unsupported
+#
 
-# check mandatory vars
-
+#
+# Check mandatory vars
+#
 ifndef KEXTNAME
 $(error KEXTNAME not defined)
 endif
@@ -77,9 +74,9 @@ KEXTBUNDLE?=	$(KEXTNAME).kext
 KEXTMACHO?=	$(KEXTNAME)
 ARCH?=		x86_64
 #ARCH?=		i386
-PREFIX?=	/Library/Extensions/
+PREFIX?=	/Library/Extensions
 
-CODESIGN?=	codesign
+CODESIGN?=codesign
 
 # Apple SDK
 ifneq "" "$(SDKROOT)"
@@ -99,14 +96,19 @@ CPPFLAGS+=	-DKERNEL \
 		-I/System/Library/Frameworks/Kernel.framework/Headers \
 		-I/System/Library/Frameworks/Kernel.framework/PrivateHeaders
 
-# convenience defines
+#
+# Convenience defines
+# BUNDLEID macro will be used in KMOD_EXPLICIT_DECL
+#
 CPPFLAGS+=	-DKEXTNAME_S=\"$(KEXTNAME)\" \
 		-DKEXTVERSION_S=\"$(KEXTVERSION)\" \
 		-DKEXTBUILD_S=\"$(KEXTBUILD)\" \
 		-DBUNDLEID_S=\"$(BUNDLEID)\" \
-		-DBUNDLEID=$(BUNDLEID) \
+		-DBUNDLEID=$(BUNDLEID)
 
-# c compiler flags
+#
+# C compiler flags
+#
 ifdef MACOSX_VERSION_MIN
 CFLAGS+=	-mmacosx-version-min=$(MACOSX_VERSION_MIN)
 endif
@@ -114,7 +116,7 @@ CFLAGS+=	-arch $(ARCH) \
 		-fno-builtin \
 		-fno-common \
 		-mkernel \
-		-msoft-float
+		-mno-soft-float
 
 # warnings
 CFLAGS+=	-Wall -Wextra -g
@@ -184,7 +186,7 @@ $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
 
 ifdef SIGNCERT
 	# TODO: support --timestamp option
-	$(CODESIGN) --force --sign $(SIGNCERT) $(KEXTBUNDLE)
+	$(CODESIGN) --force --sign $(SIGNCERT) $@
 endif
 
 	dsymutil -o $<.kext.dSYM $@/Contents/MacOS/$<
@@ -215,7 +217,7 @@ uninstall:
 	sudo rm -rf "$(PREFIX)/$(KEXTBUNDLE)" || true
 
 clean:
-	rm -rf $(KEXTBUNDLE) $(KEXTBUNDLE).dSYM $(KEXTMACHO) Info.plist~ $(OBJS)
+	rm -rf $(KEXTBUNDLE) $(KEXTBUNDLE).dSYM Info.plist~ $(OBJS) $(KEXTMACHO)
 
 .PHONY: all load stat unload intall uninstall clean
 
