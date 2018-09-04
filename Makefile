@@ -7,7 +7,12 @@ KEXTVERSION=1.0.0
 KEXTBUILD=1.0.0d1
 BUNDLEDOMAIN=com.example
 
-# for creating a signed kext
+#
+# For creating a signed kext
+#
+# NOTE: code signature can significantly increase code size
+# For ad-hoc code signature  use single hyphen(e.g. -)
+#
 #SIGNCERT=	"your Apple Developer ID certificate label"
 
 # for using unsupported interfaces not part of the supported KPI
@@ -188,14 +193,16 @@ load: $(KEXTBUNDLE)
 	sudo chown -R root:wheel $<
 	sudo sync
 	sudo kextutil $<
+	# restore original owner:group
 	sudo chown -R '$(USER):$(shell id -gn)' $<
-	sudo dmesg | grep $(KEXTNAME) | tail -1
+	sudo dmesg | grep $(KEXTNAME)
 
 stat:
 	kextstat | grep $(KEXTNAME)
 
 unload:
 	sudo kextunload $(KEXTBUNDLE)
+	sudo dmesg | grep $(KEXTNAME)
 
 install: $(KEXTBUNDLE) uninstall
 	test -d "$(PREFIX)"
