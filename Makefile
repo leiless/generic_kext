@@ -28,7 +28,9 @@ BUNDLEDOMAIN=com.example
 # KEXTBUNDLE      Name of kext bundle directory; default $(KEXTNAME).kext
 # KEXTMACHO       Name of kext Mach-O executable; default $(KEXTNAME)
 #
-# MACOSX_VERSION_MIN  minimal version of macOS to target
+# MACOSX_VERSION_MIN    Minimal version of macOS to target
+#                       If you don't know  specify 10.4
+#                       Default set to current system version
 # SDKROOT         Apple Xcode SDK root directory to use
 # CPPFLAGS        Additional precompiler flags
 # CFLAGS          Additional compiler flags
@@ -115,11 +117,10 @@ endif
 CFLAGS+=	-arch $(ARCH) \
 		-fno-builtin \
 		-fno-common \
-		-mkernel \
-		-mno-soft-float
+		-mkernel
 
 # warnings
-CFLAGS+=	-Wall -Wextra -g
+CFLAGS+=	-Wall -Wextra
 
 # linker flags
 ifdef MACOSX_VERSION_MIN
@@ -197,14 +198,14 @@ load: $(KEXTBUNDLE)
 	sudo kextutil $<
 	# restore original owner:group
 	sudo chown -R '$(USER):$(shell id -gn)' $<
-	sudo dmesg | grep $(KEXTNAME)
+	sudo dmesg | grep $(KEXTNAME) | tail -1
 
 stat:
 	kextstat | grep $(KEXTNAME)
 
 unload:
 	sudo kextunload $(KEXTBUNDLE)
-	sudo dmesg | grep $(KEXTNAME)
+	sudo dmesg | grep $(KEXTNAME) | tail -2
 
 install: $(KEXTBUNDLE) uninstall
 	test -d "$(PREFIX)"

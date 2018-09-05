@@ -1,5 +1,5 @@
-#include <libkern/libkern.h>
 #include <mach/mach_types.h>
+#include <libkern/libkern.h>
 
 kern_return_t example_start(kmod_info_t *ki __unused, void *d __unused)
 {
