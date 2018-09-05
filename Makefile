@@ -7,41 +7,6 @@ KEXTVERSION=1.0.0
 KEXTBUILD=1.0.0d1
 BUNDLEDOMAIN=com.example
 
-#
-# Designed to be included from a Makefile which defines the following:
-#
-# KEXTNAME        Short name of the kext
-# KEXTVERSION     Version number, see TN2420
-# KEXTBUILD       Build number, see TN2420
-# BUNDLEDOMAIN    The reverse DNS notation prefix
-#
-# Optionally, the Makefile can define the following:
-#
-# COPYRIGHT       Human-readable copyright
-# SIGNCERT        Label of Developer ID cert in keyring for code signing
-#                 NOTE: code signature will increase code size(18k)
-#                 For ad-hoc signature  use single hyphen(e.g. -)
-#
-# ARCH            x86_64 (default) or i386
-# PREFIX          Install/uninstall location; default /Library/Extensions
-#
-# BUNDLEID        KEXT bundle ID; default $(BUNDLEDOMAIN).kext.$(KEXTNAME)
-# KEXTBUNDLE      Name of kext bundle directory; default $(KEXTNAME).kext
-# KEXTMACHO       Name of kext Mach-O executable; default $(KEXTNAME)
-#
-# MACOSX_VERSION_MIN    Minimal version of macOS to target
-#                       If you don't know  specify 10.4
-#                       Default set to current system version
-# SDKROOT         Apple Xcode SDK root directory to use
-# CPPFLAGS        Additional precompiler flags
-# CFLAGS          Additional compiler flags
-#                 Example: -Wunknown-warning-option
-#
-# LDFLAGS         Additional linker flags
-# LIBS            Additional libraries to link against
-# KLFLAGS         Additional kextlibs flags
-#                 Example: -unsupported
-#
 
 #
 # Check mandatory vars

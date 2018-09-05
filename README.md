@@ -22,15 +22,29 @@ Optional:
 
 - *COPYRIGHT* - Human-readable copyright
 
-- *SIGNCERT* - Label of Developer ID cert in keyring for code signing.
-
- For ad-hoc signature  use single hyphen(e.g. -)
+- *SIGNCERT* - Label of Developer ID cert in keyring for code signing; for ad-hoc signature  use single hyphen(e.g. -)
  
-- *ARCH* - x86_64 (default) or i386
+- *ARCH* - x86_64(default) or i386
 
 - *PREFIX* - Install/uninstall location; default */Library/Extensions*
 
+- *BUNDLEID* - KEXT bundle ID; default $(BUNDLEDOMAIN).kext.$(KEXTNAME)
 
+- *KEXTMACHO* - Name of kext Mach-O executable; default $(KEXTNAME)
+
+- *MACOSX_VERSION_MIN* - Minimal version of macOS to target, if you don't know, specify 10.4; default set to current system version
+
+- *SDKROOT* - Apple Xcode SDK root directory to use
+
+- *CPPFLAGS* - Additional precompiler flags
+
+- *CFLAGS* - Additional compiler flags; example: -Wunknown-warning-option
+
+- *LDFLAGS* - Additional linker flags
+
+- *LIBS* - Additional libraries to link against
+
+- *KLFLAGS* - Additional kextlibs flags; example: -unsupported
 
 ---
 
