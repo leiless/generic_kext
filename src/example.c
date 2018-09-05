@@ -13,8 +13,8 @@ kern_return_t example_stop(kmod_info_t *ki __unused, void *d __unused)
 	return KERN_SUCCESS;
 }
 
-extern kern_return_t _start(kmod_info_t *ki, void *d);
-extern kern_return_t _stop(kmod_info_t *ki, void *d);
+extern kern_return_t _start(kmod_info_t *, void *);
+extern kern_return_t _stop(kmod_info_t *, void *);
 
 /* Will expand name if it's a macro */
 #define KMOD_EXPLICIT_DECL2(name, ver, start, stop) \

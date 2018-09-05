@@ -141,8 +141,8 @@ LIBS+=		-lcc_kext
 KLFLAGS+=	-c -unsupported
 
 # source, header, object and make files
-SRCS:=		$(wildcard *.c)
-HDRS:=		$(wildcard *.h)
+SRCS:=		$(wildcard src/*.c)
+HDRS:=		$(wildcard src/*.h)
 OBJS:=		$(SRCS:.c=.o)
 MKFS:=		$(wildcard Makefile)
 
