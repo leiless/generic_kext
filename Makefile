@@ -174,7 +174,7 @@ Info.plist~: Info.plist.in
 
 $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
 	mkdir -p $@/Contents/MacOS
-	cp $< $@/Contents/MacOS
+	mv $< $@/Contents/MacOS
 
 	# Clear placeholders(o.w. kextlibs cannot parse)
 	sed 's/__KEXTLIBS__//g' Info.plist~ > $@/Contents/Info.plist
