@@ -17,6 +17,7 @@ BUNDLEDOMAIN=com.example
 #
 # Optionally, the Makefile can define the following:
 #
+# COPYRIGHT       Human-readable copyright
 # SIGNCERT        Label of Developer ID cert in keyring for code signing
 #                 NOTE: code signature will increase code size(18k)
 #                 For ad-hoc signature  use single hyphen(e.g. -)
@@ -168,18 +169,17 @@ Info.plist~: Info.plist.in
 		-e 's/__KEXTBUILD__/$(KEXTBUILD)/g' \
 		-e 's/__BUNDLEID__/$(BUNDLEID)/g' \
 		-e 's/__OSBUILD__/$(shell /usr/bin/sw_vers -buildVersion)/g' \
+		-e 's/__COPYRIGHT__/$(COPYRIGHT)/g' \
 	$^ > $@
 
 $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
 	mkdir -p $@/Contents/MacOS
 	cp $< $@/Contents/MacOS
 
-	sed -e 's/__LIBS__//g' Info.plist~ > $@/Contents/Info.plist
+	# Clear placeholders(o.w. kextlibs cannot parse)
+	sed 's/__KEXTLIBS__//g' Info.plist~ > $@/Contents/Info.plist
 
-	# TODO: replace evil system(3)
-	cat Info.plist~ \
-	| awk '/__LIBS__/ {system("kextlibs -xml $(KLFLAGS) $@");next}1' \
-	>$@/Contents/Info.plist~
+	awk '/__KEXTLIBS__/{system("kextlibs -xml $(KLFLAGS) $@");next};1' Info.plist~ > $@/Contents/Info.plist~
 
 	mv $@/Contents/Info.plist~ $@/Contents/Info.plist
 

@@ -22,11 +22,11 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>__KEXTBUILD__</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>__COPYRIGHT__</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-__LIBS__
+	<key>NSHumanReadableCopyright</key>
+	<string>__COPYRIGHT__</string>
+__KEXTLIBS__
 </dict>
 </plist>
 
