@@ -157,7 +157,7 @@ ifdef SIGNCERT
 	$(CODESIGN) --force --timestamp=none --sign $(SIGNCERT) $@
 endif
 
-	dsymutil -o $<.kext.dSYM $@/Contents/MacOS/$<
+	dsymutil -arch $(ARCH) -o $<.kext.dSYM $@/Contents/MacOS/$<
 
 load: $(KEXTBUNDLE)
 	sudo chown -R root:wheel $<
