@@ -80,13 +80,16 @@ CPPFLAGS+=	-DKEXTNAME_S=\"$(KEXTNAME)\" \
 ifdef MACOSX_VERSION_MIN
 CFLAGS+=	-mmacosx-version-min=$(MACOSX_VERSION_MIN)
 endif
-CFLAGS+=	-arch $(ARCH) \
+CFLAGS+=	-x c \
+		-arch $(ARCH) \
+		-std=c99 \
+		-nostdinc \
 		-fno-builtin \
 		-fno-common \
 		-mkernel
 
 # warnings
-CFLAGS+=	-Wall -Wextra -g
+CFLAGS+=	-Wall -Wextra -Os -g
 
 # linker flags
 ifdef MACOSX_VERSION_MIN
@@ -123,7 +126,7 @@ all: $(KEXTBUNDLE)
 $(OBJS): $(MKFS)
 
 $(KEXTMACHO): $(OBJS)
-	$(CC) $(LDFLAGS) -static -o $@ $(LIBS) $^
+	$(CC) $(LDFLAGS) -o $@ $(LIBS) $^
 	otool -h $@
 
 Info.plist~: Info.plist.in
