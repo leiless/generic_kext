@@ -6,45 +6,63 @@ Summary:
 Makefile is a GNU makefile used to build macOS generic kernel extension without heavy XCode intervention.
 
 
+Basic Requirements:
+
+As of macOS 10.10(Yosemite), unsigned(or ad-hoc signed) kernel extension cannot load by default.
+
+You can specify kext-dev-mode=1 to boot-args of nvram:
+
+1. $ sudo nvram boot-args="kext-dev-mode=1"
+2. $ sudo reboot
+
+As of macOS 10.11(El Capitan), kext-dev-mode was deprecated.
+
+Instead, you need to disable System Integrity Protection(SIP) in order to load a kernel extension:
+
+1. Boot into recovery mode(via Command + R) when booting
+2. $ csrutil enable --without kext
+3. $ reboot
+
+
 Build variables:
 
-Mandatary:
+[Mandatary]
 
-* KEXTNAME - Short name for the kext(e.g. example)
+KEXTNAME - Short name for the kext(e.g. example)
 
-* KEXTVERSION - Version number, see TN2420(e.g. 1.0.0)
+KEXTVERSION - Version number, see TN2420(e.g. 1.0.0)
 
-* KEXTBUILD - Build number, see TN2420(e.g. 1.0.0d1)
+KEXTBUILD - Build number, see TN2420(e.g. 1.0.0d1)
 
-* BUNDLEDOMAIN - Reverse DNS notation prefix(e.g. com.example)
+BUNDLEDOMAIN - Reverse DNS notation prefix(e.g. com.example)
 
-Optional:
+[Optional]
 
-* COPYRIGHT - Human-readable copyright
+COPYRIGHT - Human-readable copyright
 
-* SIGNCERT - Label of Developer ID cert in keyring for code signing; for ad-hoc signing  use single hyphen(e.g. -)
+SIGNCERT - Label of Developer ID cert in keyring for code signing; for ad-hoc signing  use single hyphen(e.g. -)
  
-* ARCH - x86_64(default) or i386
+ARCH - x86_64(default) or i386
 
-* PREFIX - Install/uninstall location; default /Library/Extensions
+PREFIX - Install/uninstall location; default /Library/Extensions
 
-* BUNDLEID - KEXT bundle ID; default $(BUNDLEDOMAIN).kext.$(KEXTNAME)
+BUNDLEID - KEXT bundle ID; default $(BUNDLEDOMAIN).kext.$(KEXTNAME)
 
-* KEXTMACHO - Name of kext Mach-O executable; default $(KEXTNAME)
+KEXTMACHO - Name of kext Mach-O executable; default $(KEXTNAME)
 
-* MACOSX_VERSION_MIN - Minimal version of macOS to target, if you don't know, specify 10.4; default set to current system version
+MACOSX_VERSION_MIN - Minimal version of macOS to target, if you don't know, specify 10.4; default set to current system version
 
-* SDKROOT - Apple Xcode SDK root directory to use
+SDKROOT - Apple Xcode SDK root directory to use
 
-* CPPFLAGS - Additional precompiler flags
+CPPFLAGS - Additional precompiler flags
 
-* CFLAGS - Additional compiler flags; example: -Wunknown-warning-option, -msoft-float
+CFLAGS - Additional compiler flags; example: -g, -Wunknown-warning-option, -msoft-float
 
-* LDFLAGS - Additional linker flags
+LDFLAGS - Additional linker flags
 
-* LIBS - Additional libraries to link against
+LIBS - Additional libraries to link against
 
-* KLFLAGS - Additional kextlibs flags; example: -unsupported
+KLFLAGS - Additional kextlibs flags; example: -unsupported
 
 
 References:
@@ -56,4 +74,6 @@ https://developer.apple.com/library/archive/technotes/tn2420/_index.html
 https://developer.apple.com/library/archive/technotes/tn2459/_index.html
 
 https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/KEXTConcept/Articles/infoplist_keys.html
+
+https://support.apple.com/en-us/HT204904
 
