@@ -22,11 +22,11 @@ Optional:
 
 * COPYRIGHT - Human-readable copyright
 
-* SIGNCERT - Label of Developer ID cert in keyring for code signing; for ad-hoc signature  use single hyphen(e.g. -)
+* SIGNCERT - Label of Developer ID cert in keyring for code signing; for ad-hoc signing  use single hyphen(e.g. -)
  
 * ARCH - x86_64(default) or i386
 
-* PREFIX - Install/uninstall location; default */Library/Extensions*
+* PREFIX - Install/uninstall location; default /Library/Extensions
 
 * BUNDLEID - KEXT bundle ID; default $(BUNDLEDOMAIN).kext.$(KEXTNAME)
 

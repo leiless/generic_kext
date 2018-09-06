@@ -154,8 +154,7 @@ $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
 	touch $@
 
 ifdef SIGNCERT
-	# TODO: support --timestamp option
-	$(CODESIGN) --force --sign $(SIGNCERT) $@
+	$(CODESIGN) --force --timestamp=none --sign $(SIGNCERT) $@
 endif
 
 	dsymutil -o $<.kext.dSYM $@/Contents/MacOS/$<
