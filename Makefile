@@ -86,7 +86,7 @@ CFLAGS+=	-arch $(ARCH) \
 		-mkernel
 
 # warnings
-CFLAGS+=	-Wall -Wextra
+CFLAGS+=	-Wall -Wextra -g
 
 # linker flags
 ifdef MACOSX_VERSION_MIN
