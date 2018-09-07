@@ -192,7 +192,7 @@ uninstall:
 	sudo rm -rf "$(PREFIX)/$(KEXTBUNDLE)" || true
 
 clean:
-	rm -rf $(KEXTBUNDLE) $(KEXTBUNDLE).dSYM Info.plist~ $(OBJS)
+	rm -rf $(KEXTBUNDLE) $(KEXTBUNDLE).dSYM Info.plist~ $(OBJS) $(KEXTMACHO)
 
 .PHONY: all load stat unload intall uninstall clean
 
