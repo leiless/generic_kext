@@ -54,7 +54,12 @@ CC=		$(shell xcrun -find -sdk $(SDKROOT) cc)
 CODESIGN=	$(shell xcrun -find -sdk $(SDKROOT) codesign)
 endif
 
-# standard defines and includes for kernel extensions
+#
+# Standard defines and includes for kernel extensions
+#
+# The __makefile__ macro used to compatible with XCode
+# Since XCode use intermediate objects  which causes symbol duplicated
+#
 CPPFLAGS+=	-DKERNEL \
 		-DKERNEL_PRIVATE \
 		-DDRIVER_PRIVATE \
@@ -62,7 +67,8 @@ CPPFLAGS+=	-DKERNEL \
 		-DNeXT \
 		$(SDKFLAGS) \
 		-I/System/Library/Frameworks/Kernel.framework/Headers \
-		-I/System/Library/Frameworks/Kernel.framework/PrivateHeaders
+		-I/System/Library/Frameworks/Kernel.framework/PrivateHeaders \
+		-D__makefile__
 
 #
 # Convenience defines

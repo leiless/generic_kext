@@ -13,6 +13,7 @@ kern_return_t example_stop(kmod_info_t *ki __unused, void *d __unused)
 	return KERN_SUCCESS;
 }
 
+#ifdef __makefile__
 extern kern_return_t _start(kmod_info_t *, void *);
 extern kern_return_t _stop(kmod_info_t *, void *);
 
@@ -24,4 +25,5 @@ KMOD_EXPLICIT_DECL2(BUNDLEID, KEXTBUILD_S, _start, _stop)
 __private_extern__ kmod_start_func_t *_realmain = example_start;
 __private_extern__ kmod_stop_func_t *_antimain = example_stop;
 __private_extern__ int _kext_apple_cc = __APPLE_CC__;
+#endif
 
