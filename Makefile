@@ -39,7 +39,7 @@ endif
 # defaults
 BUNDLEID?=	$(BUNDLEDOMAIN).kext.$(KEXTNAME)
 KEXTBUNDLE?=	$(KEXTNAME).kext
-KEXTMACHO?=	$(KEXTNAME)
+KEXTMACHO?=	$(KEXTNAME).out
 ARCH?=		x86_64
 #ARCH?=		i386
 PREFIX?=	/Library/Extensions
@@ -110,8 +110,8 @@ LIBS+=		-lcc_kext
 KLFLAGS+=	-c -unsupported
 
 # source, header, object and make files
-SRCS:=		$(wildcard src/*.c)
-HDRS:=		$(wildcard src/*.h)
+SRCS:=		$(wildcard $(KEXTNAME)/*.c)
+HDRS:=		$(wildcard $(KEXTNAME)/*.h)
 OBJS:=		$(SRCS:.c=.o)
 MKFS:=		$(wildcard Makefile)
 
@@ -128,11 +128,12 @@ $(OBJS): $(MKFS)
 $(KEXTMACHO): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(LIBS) $^
 	otool -h $@
+	otool -l $@ | grep uuid
 
 Info.plist~: Info.plist.in
 	sed \
 		-e 's/__KEXTNAME__/$(KEXTNAME)/g' \
-		-e 's/__KEXTMACHO__/$(KEXTMACHO)/g' \
+		-e 's/__KEXTMACHO__/$(KEXTNAME)/g' \
 		-e 's/__KEXTVERSION__/$(KEXTVERSION)/g' \
 		-e 's/__KEXTBUILD__/$(KEXTBUILD)/g' \
 		-e 's/__BUNDLEID__/$(BUNDLEID)/g' \
@@ -142,7 +143,7 @@ Info.plist~: Info.plist.in
 
 $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
 	mkdir -p $@/Contents/MacOS
-	mv $< $@/Contents/MacOS
+	mv $< $@/Contents/MacOS/$(KEXTNAME)
 
 	# Clear placeholders(o.w. kextlibs cannot parse)
 	sed 's/__KEXTLIBS__//g' Info.plist~ > $@/Contents/Info.plist
@@ -157,7 +158,7 @@ ifdef SIGNCERT
 	$(CODESIGN) --force --timestamp=none --sign $(SIGNCERT) $@
 endif
 
-	dsymutil -arch $(ARCH) -o $<.kext.dSYM $@/Contents/MacOS/$<
+	dsymutil -arch $(ARCH) -o $(KEXTNAME).kext.dSYM $@/Contents/MacOS/$(KEXTNAME)
 
 load: $(KEXTBUNDLE)
 	sudo chown -R root:wheel $<
@@ -185,7 +186,7 @@ uninstall:
 	sudo rm -rf "$(PREFIX)/$(KEXTBUNDLE)" || true
 
 clean:
-	rm -rf $(KEXTBUNDLE) $(KEXTBUNDLE).dSYM Info.plist~ $(OBJS) $(KEXTMACHO)
+	rm -rf $(KEXTBUNDLE) $(KEXTBUNDLE).dSYM Info.plist~ $(OBJS)
 
 .PHONY: all load stat unload intall uninstall clean
 

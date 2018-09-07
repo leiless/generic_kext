@@ -38,7 +38,7 @@ BUNDLEDOMAIN - Reverse DNS notation prefix(e.g. com.example)
 
 [Optional]
 
-COPYRIGHT - Human-readable copyright
+COPYRIGHT - Human-readable copyright; default empty string
 
 SIGNCERT - Label of Developer ID cert in keyring for code signing; for ad-hoc signing  use single hyphen(e.g. -)
  
