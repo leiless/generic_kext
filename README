@@ -65,6 +65,14 @@ LIBS - Additional libraries to link against
 KLFLAGS - Additional kextlibs flags; example: -unsupported
 
 
+Joke:
+
+com.apple.kpi.private is for Apple internal use only, if you want to use private KPIs, please specify
+BUNDLEDOMAIN=com.apple and
+COPYRIGHT="Copyright © XXXX Apple Inc. All rights reserved."
+Which XXXX is a year number.
+
+
 References:
 
 https://github.com/droe/example.kext
@@ -78,4 +86,6 @@ https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/KEXT
 https://support.apple.com/en-us/HT204904
 
 https://clang.llvm.org/docs/ClangCommandLineReference.html
+
+https://opensource.apple.com/source/IOKitUser/IOKitUser-1445.40.1/kext.subproj/OSKext.c.auto.html
 
