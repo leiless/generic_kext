@@ -68,7 +68,7 @@ CPPFLAGS+=	-DKERNEL \
 		$(SDKFLAGS) \
 		-I/System/Library/Frameworks/Kernel.framework/Headers \
 		-I/System/Library/Frameworks/Kernel.framework/PrivateHeaders \
-		-D__makefile__
+		-D__kextmake__
 
 #
 # Convenience defines
