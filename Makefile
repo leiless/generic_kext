@@ -144,7 +144,6 @@ Info.plist~: Info.plist.in
 		-e 's/__KEXTBUILD__/$(KEXTBUILD)/g' \
 		-e 's/__BUNDLEID__/$(BUNDLEID)/g' \
 		-e 's/__OSBUILD__/$(shell /usr/bin/sw_vers -buildVersion)/g' \
-		-e 's/__COPYRIGHT__/$(COPYRIGHT)/g' \
 	$^ > $@
 
 $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
@@ -158,11 +157,15 @@ $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
 
 	mv $@/Contents/Info.plist~ $@/Contents/Info.plist
 
-	touch $@
+ifdef COPYRIGHT
+	/usr/libexec/PlistBuddy -c 'Add :NSHumanReadableCopyright string "$(COPYRIGHT)"' $@/Contents/Info.plist
+endif
 
 ifdef SIGNCERT
 	$(CODESIGN) --force --timestamp=none --sign $(SIGNCERT) $@
 endif
+
+	touch $@
 
 	dsymutil -arch $(ARCH) -o $(KEXTNAME).kext.dSYM $@/Contents/MacOS/$(KEXTNAME)
 
