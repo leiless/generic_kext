@@ -22,8 +22,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>__KEXTBUILD__</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 __KEXTLIBS__
 </dict>
 </plist>

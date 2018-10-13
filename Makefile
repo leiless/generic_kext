@@ -163,6 +163,7 @@ endif
 
 ifdef SIGNCERT
 	$(CODESIGN) --force --timestamp=none --sign $(SIGNCERT) $@
+	/usr/libexec/PlistBuddy -c 'Add :CFBundleSignature string ????' $@/Contents/Info.plist
 endif
 
 	touch $@
