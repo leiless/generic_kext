@@ -13,13 +13,13 @@ kern_return_t example_stop(kmod_info_t *ki __unused, void *d __unused)
 	return KERN_SUCCESS;
 }
 
-#ifdef __makefile__
+#ifdef __kextmake__
 extern kern_return_t _start(kmod_info_t *, void *);
 extern kern_return_t _stop(kmod_info_t *, void *);
 
 /* Will expand name if it's a macro */
 #define KMOD_EXPLICIT_DECL2(name, ver, start, stop) \
-	__attribute__((visibility("default")))          \
+    __attribute__((visibility("default")))          \
         KMOD_EXPLICIT_DECL(name, ver, start, stop)
 
 KMOD_EXPLICIT_DECL2(BUNDLEID, KEXTBUILD_S, _start, _stop)
