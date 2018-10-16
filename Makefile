@@ -66,8 +66,8 @@ CPPFLAGS+=	-DKERNEL \
 		-DAPPLE \
 		-DNeXT \
 		$(SDKFLAGS) \
-		-I/System/Library/Frameworks/Kernel.framework/Headers \
-		-I/System/Library/Frameworks/Kernel.framework/PrivateHeaders \
+		-I$(SDKROOT)/System/Library/Frameworks/Kernel.framework/Headers \
+		-I$(SDKROOT)/System/Library/Frameworks/Kernel.framework/PrivateHeaders \
 		-D__kextmake__
 
 #
