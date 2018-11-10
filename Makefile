@@ -3,8 +3,8 @@
 #
 
 KEXTNAME=example
-KEXTVERSION=1.0.0
-KEXTBUILD=1.0.0d1
+KEXTVERSION=0000.00.01
+KEXTBUILD=0.0.1d1
 BUNDLEDOMAIN=com.example
 
 
@@ -85,6 +85,8 @@ CPPFLAGS+=	-DKEXTNAME_S=\"$(KEXTNAME)\" \
 #
 ifdef MACOSX_VERSION_MIN
 CFLAGS+=	-mmacosx-version-min=$(MACOSX_VERSION_MIN)
+else
+CFLAGS+=	-mmacosx-version-min=10.4
 endif
 CFLAGS+=	-x c \
 		-arch $(ARCH) \
@@ -100,6 +102,8 @@ CFLAGS+=	-Wall -Wextra -Os
 # linker flags
 ifdef MACOSX_VERSION_MIN
 LDFLAGS+=	-mmacosx-version-min=$(MACOSX_VERSION_MIN)
+else
+LDFLAGS+=	-mmacosx-version-min=10.4
 endif
 LDFLAGS+=	-arch $(ARCH)
 LDFLAGS+=	-nostdlib \
