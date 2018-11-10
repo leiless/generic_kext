@@ -68,7 +68,7 @@ CPPFLAGS+=	-DKERNEL \
 		$(SDKFLAGS) \
 		-I$(SDKROOT)/System/Library/Frameworks/Kernel.framework/Headers \
 		-I$(SDKROOT)/System/Library/Frameworks/Kernel.framework/PrivateHeaders \
-		-D__kextmake__
+		-D__kext_makefile__
 
 #
 # Convenience defines
@@ -173,6 +173,11 @@ endif
 	touch $@
 
 	dsymutil -arch $(ARCH) -o $(KEXTNAME).kext.dSYM $@/Contents/MacOS/$(KEXTNAME)
+
+# see: https://www.gnu.org/software/make/manual/html_node/Target_002dspecific.html
+# Those two flags must present at the same  o.w. debug symbol cannot be generated
+dbg: CPPFLAGS += -DDEBUG -g
+dbg: $(KEXTBUNDLE)
 
 load: $(KEXTBUNDLE)
 	sudo chown -R root:wheel $<

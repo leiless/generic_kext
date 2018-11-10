@@ -13,7 +13,7 @@ kern_return_t example_stop(kmod_info_t *ki __unused, void *d __unused)
 	return KERN_SUCCESS;
 }
 
-#ifdef __kextmake__
+#ifdef __kext_makefile__
 extern kern_return_t _start(kmod_info_t *, void *);
 extern kern_return_t _stop(kmod_info_t *, void *);
 
