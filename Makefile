@@ -44,15 +44,13 @@ ARCH?=		x86_64
 #ARCH?=		i386
 PREFIX?=	/Library/Extensions
 
-CODESIGN?=codesign
+# Set default XCode SDK
+SDKROOT?=	$(shell xcrun --sdk macosx --show-sdk-path)
 
-# Apple SDK
-ifneq "" "$(SDKROOT)"
 SDKFLAGS=	-isysroot $(SDKROOT)
 CC=		$(shell xcrun -find -sdk $(SDKROOT) cc)
 #CXX=		$(shell xcrun -find -sdk $(SDKROOT) c++)
 CODESIGN=	$(shell xcrun -find -sdk $(SDKROOT) codesign)
-endif
 
 #
 # Standard defines and includes for kernel extensions
@@ -136,7 +134,7 @@ all: $(KEXTBUNDLE)
 $(OBJS): $(MKFS)
 
 $(KEXTMACHO): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(LIBS) $^
+	$(CC) $(SDKFLAGS) $(LDFLAGS) -o $@ $(LIBS) $^
 	otool -h $@
 	otool -l $@ | grep uuid
 
@@ -179,7 +177,7 @@ endif
 	dsymutil -arch $(ARCH) -o $(KEXTNAME).kext.dSYM $@/Contents/MacOS/$(KEXTNAME)
 
 # see: https://www.gnu.org/software/make/manual/html_node/Target_002dspecific.html
-# Those two flags must present at the same  o.w. debug symbol cannot be generated
+# Those two flags must present at the same time  o.w. debug symbol cannot be generated
 dbg: CPPFLAGS += -DDEBUG -g
 dbg: $(KEXTBUNDLE)
 
