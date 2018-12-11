@@ -2,11 +2,7 @@
 # macOS generic kernel extension Makefile
 #
 
-KEXTNAME=example
-KEXTVERSION=0000.00.01
-KEXTBUILD=0.0.1d1
-BUNDLEDOMAIN=com.example
-
+include Makefile.inc
 
 #
 # Check mandatory vars
@@ -134,7 +130,7 @@ all: $(KEXTBUNDLE)
 $(OBJS): $(MKFS)
 
 $(KEXTMACHO): $(OBJS)
-	$(CC) $(SDKFLAGS) $(LDFLAGS) -o $@ $(LIBS) $^
+	$(CC) $(SDKFLAGS) $(LDFLAGS) $(LIBS) -o $@ $^
 	otool -h $@
 	otool -l $@ | grep uuid
 
