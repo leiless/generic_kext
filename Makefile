@@ -106,8 +106,8 @@ LDFLAGS+=	-nostdlib \
 		-Xlinker -export_dynamic
 
 # libraries
-#LIBS+=		-lkmodc++
 LIBS+=		-lkmod
+#LIBS+=		-lkmodc++
 LIBS+=		-lcc_kext
 
 # kextlibs flags
@@ -194,7 +194,7 @@ unload:
 
 install: $(KEXTBUNDLE) uninstall
 	test -d "$(PREFIX)"
-	sudo cp -pr $< "$(PREFIX)/$<"
+	sudo cp -r $< "$(PREFIX)/$<"
 	sudo chown -R root:wheel "$(PREFIX)/$<"
 
 uninstall:
