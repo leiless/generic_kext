@@ -12,19 +12,12 @@ $(error KEXTNAME not defined)
 endif
 
 ifndef KEXTVERSION
-ifdef KEXTBUILD
-KEXTVERSION:=	$(KEXTBUILD)
-else
 $(error KEXTVERSION not defined)
-endif
 endif
 
 ifndef KEXTBUILD
-ifdef KEXTVERSION
-KEXTBUILD:=	$(KEXTVERSION)
-else
-$(error KEXTBUILD not defined)
-endif
+# [assume] zero indicates no build number
+KEXTBUILD:=	0
 endif
 
 ifndef BUNDLEDOMAIN
@@ -68,11 +61,12 @@ CPPFLAGS+=	-DKERNEL \
 # Convenience defines
 # BUNDLEID macro will be used in KMOD_EXPLICIT_DECL
 #
-CPPFLAGS+=	-DKEXTNAME_S=\"$(KEXTNAME)\" \
-		-DKEXTVERSION_S=\"$(KEXTVERSION)\" \
-		-DKEXTBUILD_S=\"$(KEXTBUILD)\" \
-		-DBUNDLEID_S=\"$(BUNDLEID)\" \
-		-DBUNDLEID=$(BUNDLEID)
+CPPFLAGS+=	-DKEXTNAME_S=\"$(KEXTNAME)\"		\
+		-DKEXTVERSION_S=\"$(KEXTVERSION)\"	\
+		-DKEXTBUILD_S=\"$(KEXTBUILD)\"		\
+		-DBUNDLEID_S=\"$(BUNDLEID)\"		\
+		-DBUNDLEID=$(BUNDLEID)			\
+		-D__TZ__=\"$(shell date +%z)\"
 
 #
 # C compiler flags
@@ -111,7 +105,7 @@ LIBS+=		-lkmod
 LIBS+=		-lcc_kext
 
 # kextlibs flags
-KLFLAGS+=	-c -unsupported
+KLFLAGS+=	-xml -c -unsupported -undef-symbols
 
 # source, header, object and make files
 SRCS:=		$(wildcard $(KEXTNAME)/*.c)
@@ -122,7 +116,7 @@ MKFS:=		$(wildcard Makefile)
 
 # targets
 
-all: $(KEXTBUNDLE)
+all: debug
 
 %.o: %.c $(HDRS)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
@@ -142,6 +136,7 @@ Info.plist~: Info.plist.in
 		-e 's/__KEXTBUILD__/$(KEXTBUILD)/g' \
 		-e 's/__BUNDLEID__/$(BUNDLEID)/g' \
 		-e 's/__OSBUILD__/$(shell /usr/bin/sw_vers -buildVersion)/g' \
+		-e 's/__CLANGVER__/$(shell $(CC) -v 2>&1 | grep version)/g' \
 	$^ > $@
 
 $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
@@ -150,9 +145,7 @@ $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
 
 	# Clear placeholders(o.w. kextlibs cannot parse)
 	sed 's/__KEXTLIBS__//g' Info.plist~ > $@/Contents/Info.plist
-
-	awk '/__KEXTLIBS__/{system("kextlibs -xml $(KLFLAGS) $@");next};1' Info.plist~ > $@/Contents/Info.plist~
-
+	awk '/__KEXTLIBS__/{system("kextlibs $(KLFLAGS) $@");next};1' Info.plist~ > $@/Contents/Info.plist~
 	mv $@/Contents/Info.plist~ $@/Contents/Info.plist
 
 ifdef COPYRIGHT
@@ -174,8 +167,10 @@ endif
 
 # see: https://www.gnu.org/software/make/manual/html_node/Target_002dspecific.html
 # Those two flags must present at the same time  o.w. debug symbol cannot be generated
-dbg: CPPFLAGS += -DDEBUG -g
-dbg: $(KEXTBUNDLE)
+debug: CPPFLAGS += -g -DDEBUG
+debug: $(KEXTBUNDLE)
+
+release: $(KEXTBUNDLE)
 
 load: $(KEXTBUNDLE)
 	sudo chown -R root:wheel $<
