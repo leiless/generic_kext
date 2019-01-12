@@ -33,7 +33,12 @@ ARCH?=		x86_64
 #ARCH?=		i386
 PREFIX?=	/Library/Extensions
 
-# Set default XCode SDK
+#
+# Set default macOS SDK
+# You may use
+#  sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+# to switch to Xcode from Command Line Tools if cannot find any SDK
+#
 SDKROOT?=	$(shell xcrun --sdk macosx --show-sdk-path)
 
 SDKFLAGS=	-isysroot $(SDKROOT)
