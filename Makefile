@@ -44,7 +44,7 @@ CODESIGN=	$(shell xcrun -find -sdk $(SDKROOT) codesign)
 #
 # Standard defines and includes for kernel extensions
 #
-# The __makefile__ macro used to compatible with XCode
+# The __kext_makefile__ macro used to compatible with XCode
 # Since XCode use intermediate objects  which causes symbol duplicated
 #
 CPPFLAGS+=	-DKERNEL \
