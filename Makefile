@@ -90,7 +90,7 @@ CFLAGS+=	-x c \
 		-mkernel
 
 # warnings
-CFLAGS+=	-Wall -Wextra -Os
+CFLAGS+=	-Wall -Wextra -Werror -Os
 
 # linker flags
 ifdef MACOSX_VERSION_MIN
