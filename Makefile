@@ -57,7 +57,6 @@ CPPFLAGS+=	-DKERNEL \
 		-DDRIVER_PRIVATE \
 		-DAPPLE \
 		-DNeXT \
-		$(SDKFLAGS) \
 		-I$(SDKROOT)/System/Library/Frameworks/Kernel.framework/Headers \
 		-I$(SDKROOT)/System/Library/Frameworks/Kernel.framework/PrivateHeaders \
 		-D__kext_makefile__
@@ -81,7 +80,8 @@ CFLAGS+=	-mmacosx-version-min=$(MACOSX_VERSION_MIN)
 else
 CFLAGS+=	-mmacosx-version-min=10.4
 endif
-CFLAGS+=	-x c \
+CFLAGS+=	$(SDKFLAGS) \
+		-x c \
 		-arch $(ARCH) \
 		-std=c99 \
 		-nostdinc \
@@ -98,8 +98,9 @@ LDFLAGS+=	-mmacosx-version-min=$(MACOSX_VERSION_MIN)
 else
 LDFLAGS+=	-mmacosx-version-min=10.4
 endif
-LDFLAGS+=	-arch $(ARCH)
-LDFLAGS+=	-nostdlib \
+LDFLAGS+=	$(SDKFLAGS) \
+		-arch $(ARCH) \
+		-nostdlib \
 		-Xlinker -kext \
 		-Xlinker -object_path_lto \
 		-Xlinker -export_dynamic
@@ -129,7 +130,7 @@ all: debug
 $(OBJS): $(MKFS)
 
 $(KEXTMACHO): $(OBJS)
-	$(CC) $(SDKFLAGS) $(LDFLAGS) $(LIBS) -o $@ $^
+	$(CC) $(LDFLAGS) $(LIBS) -o $@ $^
 	otool -h $@
 	otool -l $@ | grep uuid
 
