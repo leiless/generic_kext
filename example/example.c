@@ -1,9 +1,14 @@
 #include <mach/mach_types.h>
 #include <libkern/libkern.h>
 
+#ifndef __TS__
+#define __TS__      "????/??/?? ??:??:??+????"
+#endif
+
 kern_return_t example_start(kmod_info_t *ki __unused, void *d __unused)
 {
 	printf(KEXTNAME_S ": start\n");
+	printf(KEXTNAME_S ": built %s\n", __TS__);
 	return KERN_SUCCESS;
 }
 

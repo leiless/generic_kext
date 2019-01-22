@@ -69,8 +69,10 @@ CPPFLAGS+=	-DKEXTNAME_S=\"$(KEXTNAME)\"		\
 		-DKEXTVERSION_S=\"$(KEXTVERSION)\"	\
 		-DKEXTBUILD_S=\"$(KEXTBUILD)\"		\
 		-DBUNDLEID_S=\"$(BUNDLEID)\"		\
-		-DBUNDLEID=$(BUNDLEID)			\
-		-D__TZ__=\"$(shell date +%z)\"
+		-DBUNDLEID=$(BUNDLEID)
+
+TIME_STAMP:=	$(shell date +'%Y/%m/%d\ %H:%M:%S%z')
+CPPFLAGS+=	-D__TS__=\"$(TIME_STAMP)\"
 
 #
 # C compiler flags
