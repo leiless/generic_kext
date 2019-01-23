@@ -156,6 +156,10 @@ $(KEXTBUNDLE): $(KEXTMACHO) Info.plist~
 	awk '/__KEXTLIBS__/{system("kextlibs $(KLFLAGS) $@");next};1' Info.plist~ > $@/Contents/Info.plist~
 	mv $@/Contents/Info.plist~ $@/Contents/Info.plist
 
+ifdef COMPATIBLE_VERSION
+	/usr/libexec/PlistBuddy -c 'Add :OSBundleCompatibleVersion string "$(COMPATIBLE_VERSION)"' $@/Contents/Info.plist
+endif
+
 ifdef COPYRIGHT
 	/usr/libexec/PlistBuddy -c 'Add :NSHumanReadableCopyright string "$(COPYRIGHT)"' $@/Contents/Info.plist
 endif
