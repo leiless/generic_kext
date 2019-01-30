@@ -116,8 +116,8 @@ LIBS+=		-lcc_kext
 KLFLAGS+=	-xml -c -unsupported -undef-symbols
 
 # source, header, object and make files
-SRCS:=		$(wildcard $(KEXTNAME)/*.c)
-HDRS:=		$(wildcard $(KEXTNAME)/*.h)
+SRCS:=		$(wildcard src/*.c)
+HDRS:=		$(wildcard src/*.h)
 OBJS:=		$(SRCS:.c=.o)
 MKFS:=		$(wildcard Makefile)
 
