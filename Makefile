@@ -92,7 +92,7 @@ CFLAGS+=	$(SDKFLAGS) \
 		-mkernel
 
 # warnings
-CFLAGS+=	-Wall -Wextra -Werror -Os
+CFLAGS+=	-Wall -Wextra -Werror
 
 # linker flags
 ifdef MACOSX_VERSION_MIN
@@ -172,12 +172,15 @@ endif
 
 	dsymutil $(ARCHFLAGS) -o $(KEXTNAME).kext.dSYM $@/Contents/MacOS/$(KEXTNAME)
 
-release: $(KEXTBUNDLE)
-
 # see: https://www.gnu.org/software/make/manual/html_node/Target_002dspecific.html
 # Those two flags must present at the same time  o.w. debug symbol cannot be generated
 debug: CPPFLAGS += -g -DDEBUG
-debug: release
+debug: CFLAGS += -O0
+debug: $(KEXTBUNDLE)
+
+# see: https://stackoverflow.com/questions/15548023/clang-optimization-levels
+release: CFLAGS += -O2
+release: $(KEXTBUNDLE)
 
 load: $(KEXTBUNDLE)
 	sudo chown -R root:wheel $<
