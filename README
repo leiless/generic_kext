@@ -91,3 +91,5 @@ https://clang.llvm.org/docs/ClangCommandLineReference.html
 
 https://opensource.apple.com/source/IOKitUser/IOKitUser-1445.40.1/kext.subproj/OSKext.c.auto.html
 
+http://www.goodbits.ca/index.php/2017/09/25/building-an-apple-osx-kernel-module-with-cmake-cc
+
