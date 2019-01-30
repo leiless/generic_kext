@@ -29,8 +29,8 @@ endif
 BUNDLEID?=	$(BUNDLEDOMAIN).kext.$(KEXTNAME)
 KEXTBUNDLE?=	$(KEXTNAME).kext
 KEXTMACHO?=	$(KEXTNAME).out
-ARCH?=		x86_64
-#ARCH?=		i386
+ARCHFLAGS?=	-arch x86_64
+#ARCHFLAGS?=	-arch x86_64 -arch i386
 PREFIX?=	/Library/Extensions
 
 #
@@ -83,8 +83,8 @@ else
 CFLAGS+=	-mmacosx-version-min=10.4
 endif
 CFLAGS+=	$(SDKFLAGS) \
+		$(ARCHFLAGS) \
 		-x c \
-		-arch $(ARCH) \
 		-std=c99 \
 		-nostdinc \
 		-fno-builtin \
@@ -101,7 +101,7 @@ else
 LDFLAGS+=	-mmacosx-version-min=10.4
 endif
 LDFLAGS+=	$(SDKFLAGS) \
-		-arch $(ARCH) \
+		$(ARCHFLAGS) \
 		-nostdlib \
 		-Xlinker -kext \
 		-Xlinker -object_path_lto \
@@ -170,7 +170,7 @@ endif
 
 	touch $@
 
-	dsymutil -arch $(ARCH) -o $(KEXTNAME).kext.dSYM $@/Contents/MacOS/$(KEXTNAME)
+	dsymutil $(ARCHFLAGS) -o $(KEXTNAME).kext.dSYM $@/Contents/MacOS/$(KEXTNAME)
 
 release: $(KEXTBUNDLE)
 
