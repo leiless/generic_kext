@@ -117,10 +117,7 @@ KLFLAGS+=	-xml -c -unsupported -undef-symbols
 
 # source, header, object and make files
 SRCS:=		$(wildcard src/*.c)
-HDRS:=		$(wildcard src/*.h)
 OBJS:=		$(SRCS:.c=.o)
-MKFS:=		$(wildcard Makefile)
-
 
 # targets
 
@@ -128,8 +125,6 @@ all: debug
 
 %.o: %.c $(HDRS)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
-
-$(OBJS): $(MKFS)
 
 $(KEXTMACHO): $(OBJS)
 	$(CC) $(LDFLAGS) $(LIBS) -o $@ $^
