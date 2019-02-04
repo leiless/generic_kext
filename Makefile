@@ -164,7 +164,7 @@ ifdef SIGNCERT
 	/usr/libexec/PlistBuddy -c 'Add :CFBundleSignature string ????' $@/Contents/Info.plist
 endif
 
-	# Empty-dependency kext cannot be load  so we add one manually
+	# Empty-dependency kext cannot be load  so we add one if necessary
 	/usr/libexec/PlistBuddy -c 'Print OSBundleLibraries' $@/Contents/Info.plist &> /dev/null || \
 		/usr/libexec/PlistBuddy -c 'Add :OSBundleLibraries:com.apple.kpi.bsd string "8.0b1"' $@/Contents/Info.plist
 
