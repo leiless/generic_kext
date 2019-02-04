@@ -115,7 +115,7 @@ LIBS+=		-lcc_kext
 # kextlibs flags
 KLFLAGS+=	-xml -c -unsupported -undef-symbols
 
-# source, header, object and make files
+# source, object files
 SRCS:=		$(wildcard src/*.c)
 OBJS:=		$(SRCS:.c=.o)
 
